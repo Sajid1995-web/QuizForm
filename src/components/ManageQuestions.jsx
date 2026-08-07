@@ -1,7 +1,7 @@
  import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = "https://quizappbackend-xngu.onrender.com";
+const API_BASE = "https://quizappbackend-k09m.onrender.comm";
 
 function ManageQuestions() {
   const navigate = useNavigate();
