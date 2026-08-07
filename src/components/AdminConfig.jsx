@@ -34,7 +34,7 @@ function AdminConfig() {
   const [prevQuizName, setPrevQuizName] = useState("");
 
   useEffect(() => {
-    fetch("https://quizappbackend-xngu.onrender.com/admin/config")
+    fetch("https://quizappbackend-k09m.onrender.com/admin/config")
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
@@ -67,8 +67,8 @@ function AdminConfig() {
       if (!pollingActive) return;
       try {
         const [timeRes, statusRes] = await Promise.all([
-          fetch("https://quizappbackend-xngu.onrender.com/servertime"),
-          fetch("https://quizappbackend-xngu.onrender.com/quiz-status"),
+          fetch("https://quizappbackend-k09m.onrender.com/servertime"),
+          fetch("https://quizappbackend-k09m.onrender.com/quiz-status"),
         ]);
         const timeData = await timeRes.json();
         const statusData = await statusRes.json();
@@ -181,7 +181,7 @@ function AdminConfig() {
       isQuizNameChanged,
     };
 
-    const res = await fetch("https://quizappbackend-xngu.onrender.com/admin/config", {
+    const res = await fetch("https://quizappbackend-k09m.onrender.com/admin/config", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -229,7 +229,7 @@ function AdminConfig() {
   const handleClearCsv = async () => {
     if (!window.confirm("Delete the current results CSV file? This cannot be undone.")) return;
     try {
-      const res = await fetch("https://quizappbackend-xngu.onrender.com/admin/clear-csv", { method: "DELETE" });
+      const res = await fetch("https://quizappbackend-k09m.onrender.com/admin/clear-csv", { method: "DELETE" });
       const data = await res.json();
       alert(data.message);
     } catch (err) {
@@ -247,13 +247,13 @@ function AdminConfig() {
       {/* Navigation */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-xngu.onrender.com/results-csv", "_blank")}>
+          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-k09m.onrender.com/results-csv", "_blank")}>
             📊 Download Results
           </button>
-          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-xngu.onrender.com/registrations-csv", "_blank")}>
+          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-k09m.onrender.com/registrations-csv", "_blank")}>
             📋 Download Registrations
           </button>
-          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-xngu.onrender.com/questions-csv", "_blank")}>
+          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-k09m.onrender.com/questions-csv", "_blank")}>
             📋 Download Questions
           </button>
           <button className="btn btn-primary" onClick={() => navigate("/manage-questions")}>
