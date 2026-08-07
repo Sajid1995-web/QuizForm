@@ -21,7 +21,7 @@ function PostQuestionForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://quizappbackend-xngu.onrender.com/post-question", {
+      const response = await fetch("https://quizappbackend-k09m.onrender.com/post-question", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, topic: "General" }),
