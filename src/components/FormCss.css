@@ -1,0 +1,125 @@
+/* -------------------------------
+   GLOBAL FORM CONTAINER
+-------------------------------- */
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  background: #121212;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* -------------------------------
+   FORM TITLE
+-------------------------------- */
+h2 {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 18px;
+}
+
+/* -------------------------------
+   FORM GROUP
+-------------------------------- */
+form > div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+/* -------------------------------
+   LABELS
+-------------------------------- */
+label {
+  font-size: 14px;
+  color: #bdbdbd;
+  margin-bottom: 6px;
+}
+
+/* -------------------------------
+   INPUTS & TEXTAREAS
+-------------------------------- */
+input,
+textarea,
+select {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #2e2e2e;
+  background: #1e1e1e;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* -------------------------------
+   FOCUS STATES
+-------------------------------- */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #4f9cff;
+  box-shadow: 0 0 0 1px rgba(79, 156, 255, 0.4);
+}
+
+/* -------------------------------
+   SELECT DROPDOWN
+-------------------------------- */
+select {
+  cursor: pointer;
+}
+
+/* -------------------------------
+   SUBMIT BUTTON
+-------------------------------- */
+button {
+  margin-top: 10px;
+  padding: 12px;
+  background: linear-gradient(135deg, #4f9cff, #6b5cff);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(79, 156, 255, 0.35);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* -------------------------------
+   RESPONSE MESSAGE
+-------------------------------- */
+p {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 14px;
+  color: #7ee787;
+}
+
+/* -------------------------------
+   MOBILE RESPONSIVE
+-------------------------------- */
+@media (max-width: 640px) {
+  form {
+    padding: 16px;
+  }
+
+  textarea {
+    min-height: 70px;
+  }
+}
