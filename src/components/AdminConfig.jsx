@@ -250,15 +250,7 @@ function AdminConfig() {
       {/* Navigation */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button className="btn btn-secondary" onClick={() => window.open(`${API_BASE}/results-csv`, "_blank")}>
-            📊 Download Results
-          </button>
-          <button className="btn btn-secondary" onClick={() => window.open(`${API_BASE}/registrations-csv`, "_blank")}>
-            📋 Download Registrations
-          </button>
-          <button className="btn btn-secondary" onClick={() => window.open(`${API_BASE}/questions-csv`, "_blank")}>
-            📋 Download Questions
-          </button>
+ 
           <button className="btn btn-primary" onClick={() => navigate("/manage-questions")}>
             📝 Manage Questions
           </button>
