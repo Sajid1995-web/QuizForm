@@ -1,6 +1,9 @@
  import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+// Use local backend – change this to your production URL when deploying
+const API_BASE = "https://quizappbackend-k09m.onrender.com";
+
 function AdminConfig() {
   const navigate = useNavigate();
   const [showConfig, setShowConfig] = useState(true); // Toggle state
@@ -34,7 +37,7 @@ function AdminConfig() {
   const [prevQuizName, setPrevQuizName] = useState("");
 
   useEffect(() => {
-    fetch("https://quizappbackend-k09m.onrender.com/admin/config")
+    fetch(`${API_BASE}/admin/config`)
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
@@ -67,8 +70,8 @@ function AdminConfig() {
       if (!pollingActive) return;
       try {
         const [timeRes, statusRes] = await Promise.all([
-          fetch("https://quizappbackend-k09m.onrender.com/servertime"),
-          fetch("https://quizappbackend-k09m.onrender.com/quiz-status"),
+          fetch(`${API_BASE}/servertime`),
+          fetch(`${API_BASE}/quiz-status`),
         ]);
         const timeData = await timeRes.json();
         const statusData = await statusRes.json();
@@ -181,7 +184,7 @@ function AdminConfig() {
       isQuizNameChanged,
     };
 
-    const res = await fetch("https://quizappbackend-k09m.onrender.com/admin/config", {
+    const res = await fetch(`${API_BASE}/admin/config`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -229,7 +232,7 @@ function AdminConfig() {
   const handleClearCsv = async () => {
     if (!window.confirm("Delete the current results CSV file? This cannot be undone.")) return;
     try {
-      const res = await fetch("https://quizappbackend-k09m.onrender.com/admin/clear-csv", { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/admin/clear-csv`, { method: "DELETE" });
       const data = await res.json();
       alert(data.message);
     } catch (err) {
@@ -247,13 +250,13 @@ function AdminConfig() {
       {/* Navigation */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-k09m.onrender.com/results-csv", "_blank")}>
+          <button className="btn btn-secondary" onClick={() => window.open(`${API_BASE}/results-csv`, "_blank")}>
             📊 Download Results
           </button>
-          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-k09m.onrender.com/registrations-csv", "_blank")}>
+          <button className="btn btn-secondary" onClick={() => window.open(`${API_BASE}/registrations-csv`, "_blank")}>
             📋 Download Registrations
           </button>
-          <button className="btn btn-secondary" onClick={() => window.open("https://quizappbackend-k09m.onrender.com/questions-csv", "_blank")}>
+          <button className="btn btn-secondary" onClick={() => window.open(`${API_BASE}/questions-csv`, "_blank")}>
             📋 Download Questions
           </button>
           <button className="btn btn-primary" onClick={() => navigate("/manage-questions")}>
@@ -272,12 +275,17 @@ function AdminConfig() {
       <div style={{ background: "#f8f9fa", padding: "1rem", borderRadius: "var(--radius)", marginBottom: "1.5rem" }}>
         <h4 style={{ marginTop: 0 }}>🕒 Server Status</h4>
         {serverTime && (
-          <div>
+          <div style={{ marginBottom: "5px" }}>
             <strong>Server Time (IST):</strong> {serverTime.serverTimeIST}
           </div>
         )}
         {quizStatus && (
           <div>
+            {/* Display the Active Quiz Name */}
+            <div style={{ marginBottom: "5px" }}>
+              <strong>Active Quiz Name:</strong> <span style={{ color: "#0066b3", fontWeight: "bold" }}>{prevQuizName || "Not Set"}</span>
+            </div>
+            
             <div>
               <strong>Quiz Status:</strong>{" "}
               <span style={{ color: quizStatus.isQuizOpen ? "green" : quizStatus.hasEnded ? "red" : "orange" }}>
@@ -300,7 +308,7 @@ function AdminConfig() {
         )}
       </div>
 
-      {/* Toggle Button – arrow direction follows standard: ▼ when collapsed, ▲ when expanded */}
+      {/* Toggle Button */}
       <button
         onClick={() => setShowConfig(!showConfig)}
         style={{
@@ -317,7 +325,7 @@ function AdminConfig() {
         {showConfig ? "▲ Hide Configuration" : "▼ Show Configuration"}
       </button>
 
-      {/* Configuration Form – conditionally rendered */}
+      {/* Configuration Form */}
       {showConfig && (
         <>
           <h2 style={{ color: "#000000" }}>⚙️ Master Exam Configuration</h2>
@@ -334,7 +342,7 @@ function AdminConfig() {
                 required
                 className="form-control"
               />
-              <small className="form-hint" style={{ color: "#ffff" }}>Changing this will delete all existing questions and reset CSVs.</small>
+              <small className="form-hint" style={{ color: "#888" }}>Changing this will archive the current quiz attempts and create a new session.</small>
             </div>
 
             {/* Start Time */}
@@ -377,7 +385,7 @@ function AdminConfig() {
                 step="0.5"
                 className="form-control"
               />
-              <small className="form-hint" style={{ color: "#ffff" }}>Marks for correct answer</small>
+              <small className="form-hint" style={{ color: "#888" }}>Marks for correct answer</small>
             </div>
 
             {/* Negative Marks */}
@@ -393,24 +401,24 @@ function AdminConfig() {
                 step="0.5"
                 className="form-control"
               />
-              <small className="form-hint" style={{ color: "#ffff" }}>Penalty for wrong answer</small>
+              <small className="form-hint" style={{ color: "#888" }}>Penalty for wrong answer</small>
             </div>
 
-            <h3 style={{ color: "#ffff" }}>Extra Registration Fields</h3>
+            <h3 style={{ color: "#000" }}>Extra Registration Fields</h3>
 
             {/* Fixed fields */}
             <div style={{ marginBottom: "1rem" }}>
-              <div style={{ fontWeight: "bold", marginBottom: "0.5rem", color: "#fff" }}>Fixed Fields (always present)</div>
+              <div style={{ fontWeight: "bold", marginBottom: "0.5rem", color: "#000" }}>Fixed Fields (always present)</div>
               <ul style={{ listStyle: "none", paddingLeft: 0 }}>
                 <li style={{ display: "flex", alignItems: "center", gap: "12px", padding: "8px 0", borderBottom: "1px solid #eee" }}>
-                  <span style={{ color: "#ffff", minWidth: "120px", fontWeight: "bold" }}>Name</span>
-                  <span style={{ color: "#ffff" }}>✅ Enabled</span>
-                  <span style={{ color: "#ffff" }}>🔒 Required</span>
+                  <span style={{ color: "#000", minWidth: "120px", fontWeight: "bold" }}>Name</span>
+                  <span style={{ color: "#000" }}>✅ Enabled</span>
+                  <span style={{ color: "#000" }}>🔒 Required</span>
                 </li>
                 <li style={{ display: "flex", alignItems: "center", gap: "12px", padding: "8px 0", borderBottom: "1px solid #eee" }}>
-                  <span style={{ color: "#ffff", minWidth: "120px", fontWeight: "bold" }}>Email</span>
-                  <span style={{ color: "#ffff" }}>✅ Enabled</span>
-                  <span style={{ color: "#ffff" }}>🔒 Required</span>
+                  <span style={{ color: "#000", minWidth: "120px", fontWeight: "bold" }}>Email</span>
+                  <span style={{ color: "#000" }}>✅ Enabled</span>
+                  <span style={{ color: "#000" }}>🔒 Required</span>
                 </li>
               </ul>
             </div>
@@ -450,8 +458,8 @@ function AdminConfig() {
                       </>
                     ) : (
                       <>
-                        <span style={{ minWidth: "120px", fontWeight: "bold", color: "#fff" }}>{field.name}</span>
-                        <label style={{ color: "#fff" }}>
+                        <span style={{ minWidth: "120px", fontWeight: "bold", color: "#000" }}>{field.name}</span>
+                        <label style={{ color: "#000" }}>
                           <input
                             type="checkbox"
                             checked={field.enabled}
