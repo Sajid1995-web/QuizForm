@@ -47,7 +47,7 @@ function ArchivedQuizzes() {
       default:
         return;
     }
-    window.open(`https://ascent-halt-glorify.ngrok-free.dev${url}`, "_blank");
+    window.open(`https://quizappbackend-k09m.onrender.com${url}`, "_blank");
   };
 
   // Delete a single quiz
