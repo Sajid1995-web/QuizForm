@@ -15,7 +15,7 @@ function ArchivedQuizzes() {
 
   const fetchQuizzes = () => {
     setLoading(true);
-    fetch("https://ascent-halt-glorify.ngrok-free.dev /admin/archived-quizzes")
+    fetch("https://ascent-halt-glorify.ngrok-free.dev/admin/archived-quizzes")
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
@@ -47,7 +47,7 @@ function ArchivedQuizzes() {
       default:
         return;
     }
-    window.open(`https://ascent-halt-glorify.ngrok-free.dev ${url}`, "_blank");
+    window.open(`https://ascent-halt-glorify.ngrok-free.dev${url}`, "_blank");
   };
 
   // Delete a single quiz
@@ -58,7 +58,7 @@ function ArchivedQuizzes() {
     setDeleting(true);
     try {
       const response = await fetch(
-        `https://ascent-halt-glorify.ngrok-free.dev /admin/archived-quizzes/${encodeURIComponent(quizName)}`,
+        `https://ascent-halt-glorify.ngrok-free.dev/admin/archived-quizzes/${encodeURIComponent(quizName)}`,
         { method: "DELETE" }
       );
       const data = await response.json();
@@ -82,7 +82,7 @@ function ArchivedQuizzes() {
     }
     setDeleting(true);
     try {
-      const response = await fetch("https://ascent-halt-glorify.ngrok-free.dev /admin/archived-quizzes", { method: "DELETE" });
+      const response = await fetch("https://ascent-halt-glorify.ngrok-free.dev/admin/archived-quizzes", { method: "DELETE" });
       const data = await response.json();
       if (data.success) {
         setQuizzes([]);
