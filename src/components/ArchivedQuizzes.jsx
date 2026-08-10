@@ -7,7 +7,9 @@ function ArchivedQuizzes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [deleting, setDeleting] = useState(false); // for UI feedback
+  const [deleting, setDeleting] = useState(false);
+
+  const API_BASE = "https://quizappbackend-k09m.onrender.com";
 
   useEffect(() => {
     fetchQuizzes();
@@ -15,7 +17,7 @@ function ArchivedQuizzes() {
 
   const fetchQuizzes = () => {
     setLoading(true);
-    fetch("https://quizappbackend-k09m.onrender.com")
+    fetch(`${API_BASE}/admin/archived-quizzes`)
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
@@ -31,7 +33,7 @@ function ArchivedQuizzes() {
       });
   };
 
-  // Download functions
+  // Download functions (unchanged except using API_BASE)
   const downloadCsv = (quizName, type) => {
     let url;
     switch (type) {
@@ -47,18 +49,22 @@ function ArchivedQuizzes() {
       default:
         return;
     }
-    window.open(`https://quizappbackend-k09m.onrender.com${url}`, "_blank");
+    window.open(`${API_BASE}${url}`, "_blank");
   };
 
-  // Delete a single quiz
+  // Delete a single archived quiz
   const deleteQuiz = async (quizName) => {
-    if (!window.confirm(`Are you sure you want to delete the archived quiz "${quizName}"? This action cannot be undone.`)) {
+    if (
+      !window.confirm(
+        `Are you sure you want to delete the archived quiz "${quizName}"? This action cannot be undone.`
+      )
+    ) {
       return;
     }
     setDeleting(true);
     try {
       const response = await fetch(
-        `https://quizappbackend-k09m.onrender.com/${encodeURIComponent(quizName)}`,
+        `${API_BASE}/admin/archived-quizzes/${encodeURIComponent(quizName)}`,
         { method: "DELETE" }
       );
       const data = await response.json();
@@ -67,28 +73,6 @@ function ArchivedQuizzes() {
         setError("");
       } else {
         setError(data.message || "Failed to delete quiz.");
-      }
-    } catch (err) {
-      setError("Network error: " + err.message);
-    } finally {
-      setDeleting(false);
-    }
-  };
-
-  // Delete all archived quizzes
-  const deleteAllQuizzes = async () => {
-    if (!window.confirm("Are you sure you want to delete ALL archived quizzes? This action cannot be undone.")) {
-      return;
-    }
-    setDeleting(true);
-    try {
-      const response = await fetch("https://quizappbackend-k09m.onrender.com", { method: "DELETE" });
-      const data = await response.json();
-      if (data.success) {
-        setQuizzes([]);
-        setError("");
-      } else {
-        setError(data.message || "Failed to delete all quizzes.");
       }
     } catch (err) {
       setError("Network error: " + err.message);
@@ -108,16 +92,7 @@ function ArchivedQuizzes() {
         <button className="btn btn-secondary" onClick={() => navigate(-1)}>
           ← Back to Admin
         </button>
-        {quizzes.length > 0 && (
-          <button
-            className="btn btn-danger"
-            onClick={deleteAllQuizzes}
-            disabled={deleting}
-            style={{ marginLeft: 10 }}
-          >
-            🗑️ Delete All
-          </button>
-        )}
+        {/* Delete All button removed – not supported by backend */}
       </div>
 
       <div style={{ marginBottom: 20, display: "flex", gap: 10, alignItems: "center" }}>
@@ -174,7 +149,9 @@ function ArchivedQuizzes() {
                         {end.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
                       </td>
                       <td style={{ padding: 10, border: "1px solid #ddd" }}>{q.durationMinutes}</td>
-                      <td style={{ padding: 10, border: "1px solid #ddd", textAlign: "center" }}>{q.count}</td>
+                      <td style={{ padding: 10, border: "1px solid #ddd", textAlign: "center" }}>
+                        {q.attemptsCount}   {/* changed from q.count */}
+                      </td>
                       <td style={{ padding: 10, border: "1px solid #ddd", textAlign: "center" }}>
                         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center" }}>
                           <button
