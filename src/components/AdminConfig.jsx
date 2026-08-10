@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 
 // Use local backend – change this to your production URL when deploying
-const API_BASE = "https://quizappbackend-k09m.onrender.com";
+const API_BASE = "https://ascent-halt-glorify.ngrok-free.dev ";
 
 function AdminConfig() {
   const navigate = useNavigate();
