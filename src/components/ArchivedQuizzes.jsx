@@ -9,7 +9,7 @@ function ArchivedQuizzes() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deleting, setDeleting] = useState(false);
 
-  const API_BASE = "http://localhost:3000";
+  const API_BASE = "https://quizappbackend-k09m.onrender.com";
 
   useEffect(() => {
     fetchQuizzes();
