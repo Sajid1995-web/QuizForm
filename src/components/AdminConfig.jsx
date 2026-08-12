@@ -1,12 +1,11 @@
  import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Use local backend – change this to your production URL when deploying
-const API_BASE = "https://quizappbackend-k09m.onrender.com";
+const API_BASE = "http://localhost:3000";
 
 function AdminConfig() {
   const navigate = useNavigate();
-  const [showConfig, setShowConfig] = useState(true); // Toggle state
+  const [showConfig, setShowConfig] = useState(true);
 
   const [config, setConfig] = useState({
     startTime: "",
@@ -15,6 +14,7 @@ function AdminConfig() {
     negativeMarks: 0,
     quizName: "",
     registrationFields: {},
+    registrationOpen: true,
   });
   const [fields, setFields] = useState([]);
   const [newFieldName, setNewFieldName] = useState("");
@@ -35,7 +35,9 @@ function AdminConfig() {
   const intervalRef = useRef(null);
 
   const [prevQuizName, setPrevQuizName] = useState("");
+  const [registrationOpen, setRegistrationOpen] = useState(true);
 
+  // Load configuration on mount
   useEffect(() => {
     fetch(`${API_BASE}/admin/config`)
       .then((r) => r.json())
@@ -49,7 +51,9 @@ function AdminConfig() {
             negativeMarks: c.negativeMarks ?? 0,
             quizName: c.quizName || "",
             registrationFields: c.registrationFields || {},
+            registrationOpen: c.registrationOpen ?? true,
           });
+          setRegistrationOpen(c.registrationOpen ?? true);
           setPrevQuizName(c.quizName || "");
           const fieldArray = Object.entries(c.registrationFields || {}).map(
             ([name, { enabled, required }]) => ({
@@ -164,6 +168,7 @@ function AdminConfig() {
     setNewFieldRequired(false);
   };
 
+  // Submit configuration
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -182,6 +187,7 @@ function AdminConfig() {
       quizName: config.quizName,
       registrationFields,
       isQuizNameChanged,
+      registrationOpen: registrationOpen, // send toggle state
     };
 
     const res = await fetch(`${API_BASE}/admin/config`, {
@@ -200,6 +206,7 @@ function AdminConfig() {
     }
   };
 
+  // Reset config (local only – does not clear CSV files)
   const handleResetConfig = () => {
     if (!window.confirm("Reset ALL configuration to blank/default values? This will clear the quiz name, start time, marks, and extra fields. (CSV files will NOT be touched.)")) return;
 
@@ -210,7 +217,9 @@ function AdminConfig() {
       negativeMarks: 0,
       quizName: "",
       registrationFields: {},
+      registrationOpen: true,
     });
+    setRegistrationOpen(true);
     setFields([]);
     setMessage("🔄 Configuration reset to blank.");
 
@@ -229,6 +238,7 @@ function AdminConfig() {
     }
   };
 
+  // Clear current CSV (for this quiz)
   const handleClearCsv = async () => {
     if (!window.confirm("Delete the current results CSV file? This cannot be undone.")) return;
     try {
@@ -250,12 +260,18 @@ function AdminConfig() {
       {/* Navigation */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
- 
           <button className="btn btn-primary" onClick={() => navigate("/manage-questions")}>
             📝 Manage Questions
           </button>
           <button className="btn btn-info" onClick={() => navigate("/archived-quizzes")}>
             📜 View Past Quizzes
+          </button>
+          {/* NEW: Download Live Registration CSV button */}
+          <button
+            className="btn btn-success"
+            onClick={() => window.open(`${API_BASE}/registrations-csv`, '_blank')}
+          >
+            📥 Download Registrations (Live)
           </button>
         </div>
         <button className="btn btn-danger" onClick={handleLogout}>
@@ -263,7 +279,7 @@ function AdminConfig() {
         </button>
       </div>
 
-       {/* Server Time & Quiz Status */}
+      {/* Server Time & Quiz Status */}
       <div style={{ background: "#f8f9fa", padding: "1rem", borderRadius: "var(--radius)", marginBottom: "1.5rem" }}>
         <h4 style={{ marginTop: 0 }}>🕒 Server Status</h4>
         {serverTime && (
@@ -273,11 +289,9 @@ function AdminConfig() {
         )}
         {quizStatus && (
           <div>
-            {/* NEW: Display the Active Quiz Name */}
             <div style={{ marginBottom: "5px" }}>
               <strong>Active Quiz Name:</strong> <span style={{ color: "#0066b3", fontWeight: "bold" }}>{prevQuizName || "Not Set"}</span>
             </div>
-            
             <div>
               <strong>Quiz Status:</strong>{" "}
               <span style={{ color: quizStatus.isQuizOpen ? "green" : quizStatus.hasEnded ? "red" : "orange" }}>
@@ -299,7 +313,8 @@ function AdminConfig() {
           </div>
         )}
       </div>
-      {/* Toggle Button – arrow direction follows standard: ▲ when expanded, ▼ when collapsed */}
+
+      {/* Toggle Configuration */}
       <button
         onClick={() => setShowConfig(!showConfig)}
         style={{
@@ -316,7 +331,6 @@ function AdminConfig() {
         {showConfig ? "▲ Hide Configuration" : "▼ Show Configuration"}
       </button>
 
-      {/* Configuration Form – conditionally rendered */}
       {showConfig && (
         <>
           <h2 style={{ color: "#000000" }}>⚙️ Master Exam Configuration</h2>
@@ -334,6 +348,26 @@ function AdminConfig() {
                 className="form-control"
               />
               <small className="form-hint" style={{ color: "#ffff" }}>Changing this will delete all existing questions and reset CSVs.</small>
+            </div>
+
+            {/* NEW: Registration Open/Close Toggle */}
+            <div className="form-group">
+              <label className="form-label">Registration Status</label>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <span style={{ color: registrationOpen ? "green" : "red", fontWeight: "bold" }}>
+                  {registrationOpen ? "🟢 Open" : "🔴 Closed"}
+                </span>
+                <button
+                  type="button"
+                  className={`btn ${registrationOpen ? "btn-danger" : "btn-success"}`}
+                  onClick={() => setRegistrationOpen(!registrationOpen)}
+                >
+                  {registrationOpen ? "Close Registration" : "Open Registration"}
+                </button>
+              </div>
+              <small className="form-hint" style={{ color: "#ffff" }}>
+                When closed, new students cannot register for the quiz.
+              </small>
             </div>
 
             {/* Start Time */}
