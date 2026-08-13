@@ -187,7 +187,7 @@ function AdminConfig() {
       quizName: config.quizName,
       registrationFields,
       isQuizNameChanged,
-      registrationOpen: registrationOpen, // send toggle state
+      registrationOpen: registrationOpen,
     };
 
     const res = await fetch(`${API_BASE}/admin/config`, {
@@ -266,12 +266,21 @@ function AdminConfig() {
           <button className="btn btn-info" onClick={() => navigate("/archived-quizzes")}>
             📜 View Past Quizzes
           </button>
-          {/* NEW: Download Live Registration CSV button */}
+
+          {/* DOWNLOAD REGISTRATIONS (LIVE) */}
           <button
             className="btn btn-success"
             onClick={() => window.open(`${API_BASE}/registrations-csv`, '_blank')}
           >
             📥 Download Registrations (Live)
+          </button>
+
+          {/* DOWNLOAD RESULTS (LIVE) — NEW BUTTON */}
+          <button
+            className="btn btn-success"
+            onClick={() => window.open(`${API_BASE}/results-csv`, '_blank')}
+          >
+            📊 Download Results (Live)
           </button>
         </div>
         <button className="btn btn-danger" onClick={handleLogout}>
@@ -350,7 +359,7 @@ function AdminConfig() {
               <small className="form-hint" style={{ color: "#ffff" }}>Changing this will delete all existing questions and reset CSVs.</small>
             </div>
 
-            {/* NEW: Registration Open/Close Toggle */}
+            {/* Registration Open/Close Toggle */}
             <div className="form-group">
               <label className="form-label">Registration Status</label>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
