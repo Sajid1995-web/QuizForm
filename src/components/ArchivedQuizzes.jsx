@@ -46,6 +46,9 @@ function ArchivedQuizzes() {
       case "questions":
         url = `/admin/archived-questions-csv/${encodeURIComponent(quizName)}`;
         break;
+         case "notsubmitted":
+      url = `/admin/archived-not-submitted-csv/${encodeURIComponent(quizName)}`;
+      break;
        
       default:
         return;
