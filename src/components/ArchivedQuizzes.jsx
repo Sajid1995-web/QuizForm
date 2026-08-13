@@ -188,9 +188,7 @@ function ArchivedQuizzes() {
                           >
                             🗑️ Delete
                           </button>
-                            <button className="btn btn-warning btn-sm" onClick={() => downloadCsv(q.quizName, "notsubmitted")} disabled={deleting}>
-    📋 Not Submitted
-  </button>
+                
                         </div>
                       </td>
                     </tr>
