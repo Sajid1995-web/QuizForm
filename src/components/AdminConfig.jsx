@@ -267,7 +267,7 @@ function AdminConfig() {
             📜 View Past Quizzes
           </button>
 
-          {/* DOWNLOAD REGISTRATIONS (LIVE) */}
+          {/* Download Registrations (Live) */}
           <button
             className="btn btn-success"
             onClick={() => window.open(`${API_BASE}/registrations-csv`, '_blank')}
@@ -275,12 +275,20 @@ function AdminConfig() {
             📥 Download Registrations (Live)
           </button>
 
-          {/* DOWNLOAD RESULTS (LIVE) — NEW BUTTON */}
+          {/* Download Results (Live) */}
           <button
             className="btn btn-success"
             onClick={() => window.open(`${API_BASE}/results-csv`, '_blank')}
           >
             📊 Download Results (Live)
+          </button>
+
+          {/* NEW: Download Not Submitted (Live) */}
+          <button
+            className="btn btn-warning"
+            onClick={() => window.open(`${API_BASE}/admin/not-submitted-live-csv`, '_blank')}
+          >
+            📋 Download Not Submitted (Live)
           </button>
         </div>
         <button className="btn btn-danger" onClick={handleLogout}>
