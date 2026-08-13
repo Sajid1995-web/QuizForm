@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function ArchivedQuizzes() {
@@ -33,7 +33,7 @@ function ArchivedQuizzes() {
       });
   };
 
-  // Download functions (unchanged except using API_BASE)
+  // Updated downloadCsv with new "notsubmitted" case
   const downloadCsv = (quizName, type) => {
     let url;
     switch (type) {
@@ -46,10 +46,9 @@ function ArchivedQuizzes() {
       case "questions":
         url = `/admin/archived-questions-csv/${encodeURIComponent(quizName)}`;
         break;
-         case "notsubmitted":
-      url = `/admin/archived-not-submitted-csv/${encodeURIComponent(quizName)}`;
-      break;
-       
+      case "notsubmitted":   // 👈 NEW
+        url = `/admin/archived-not-submitted-csv/${encodeURIComponent(quizName)}`;
+        break;
       default:
         return;
     }
@@ -154,7 +153,7 @@ function ArchivedQuizzes() {
                       </td>
                       <td style={{ padding: 10, border: "1px solid #ddd" }}>{q.durationMinutes}</td>
                       <td style={{ padding: 10, border: "1px solid #ddd", textAlign: "center" }}>
-                        {q.attemptsCount}   {/* changed from q.count */}
+                        {q.attemptsCount}
                       </td>
                       <td style={{ padding: 10, border: "1px solid #ddd", textAlign: "center" }}>
                         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center" }}>
@@ -172,13 +171,20 @@ function ArchivedQuizzes() {
                           >
                             📋 Registrations
                           </button>
-                        
                           <button
                             className="btn btn-info btn-sm"
                             onClick={() => downloadCsv(q.quizName, "questions")}
                             disabled={deleting}
                           >
                             📝 Questions
+                          </button>
+                          {/* 👇 NEW: Not Submitted button */}
+                          <button
+                            className="btn btn-warning btn-sm"
+                            onClick={() => downloadCsv(q.quizName, "notsubmitted")}
+                            disabled={deleting}
+                          >
+                            📋 Not Submitted
                           </button>
                           <button
                             className="btn btn-danger btn-sm"
@@ -188,7 +194,6 @@ function ArchivedQuizzes() {
                           >
                             🗑️ Delete
                           </button>
-                
                         </div>
                       </td>
                     </tr>
